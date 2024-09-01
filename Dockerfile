@@ -4,7 +4,7 @@ WORKDIR /usr/src
 
 RUN npm install --global pm2
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 RUN npm install
 
