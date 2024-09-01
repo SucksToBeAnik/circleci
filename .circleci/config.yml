@@ -1,7 +1,7 @@
 version: 2.1
 
 commands:
-  ssh-remote:
+  connect-remote:
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -10,7 +10,7 @@ commands:
           name: Connect to remote machine
           command: |
             ssh -o StrictHostKeyChecking=no root@45.61.58.231 "exit"
-  start-remote-context:
+  use-remote-context:
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -65,9 +65,9 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - ssh-remote
-      - start-remote-context
+      - connect-remote
       - build-and-run-image
+      - use-remote-context
       - start-server:
           server-type: "staging"
           server-port: 3001
@@ -76,8 +76,9 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - start-remote-context
+      - connect-remote
       - build-and-run-image
+      - use-remote-context
       - start-server:
           server-type: "production"
           server-port: 3000
