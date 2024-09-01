@@ -63,7 +63,7 @@ commands:
 jobs:
   Deploy-Staging-Server:
     docker:
-      - image: cimg/base:current
+      - image: cimg/node:lts
     steps:
       - connect-remote
       - build-and-run-image
@@ -74,7 +74,7 @@ jobs:
 
   Deploy-Production-Server:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:lts
     steps:
       - connect-remote
       - build-and-run-image
