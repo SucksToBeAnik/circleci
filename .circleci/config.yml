@@ -1,0 +1,69 @@
+version: 2.1
+
+commands:
+  ssh-remote:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - test
+      - run:
+          name: Connect to remote machine
+          command: |
+            ssh -i ~/.ssh/id_rsa root@45.61.58.231
+
+  build-and-run-image:
+    steps:
+      - run:
+          name: Build a docker image from Dockerfile
+          command: |
+            docker build -t askturing-image:${CIRCLE_SHA1} .
+
+  start-server:
+    parameters:
+      server-type:
+        type: enum
+        enum: ["staging", "production"]
+        default: staging
+        description: We will be running 2 different types of servers
+      server-port:
+        type: integer
+        default: 3001
+        description: Staging server will use port 3001 and production will use 3000
+    steps:
+      - run:
+          name: Start the server on the remote machine
+          command: |
+            docker stop askturing-<< parameters.server-type >>-container || true && \
+            docker rm askturing-<< parameters.server-type >>-container || true && \
+            docker run -d --name askturing-<< parameters.server-type >>-container \
+            -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:${CIRCLE_SHA1}
+
+jobs:
+  Deploy-Staging-Server:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - ssh-remote
+      - build-and-run-image
+      - start-server:
+          server-type: "staging"
+          server-port: 3001
+
+  Deploy-Production-Server:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - ssh-remote
+      - build-and-run-image
+      - start-server:
+          server-type: "production"
+          server-port: 3000
+
+workflows:
+  askturing-deployment-workflow:
+    jobs:
+      - Deploy-Staging-Server
+      - Deploy-Production-Server:
+          type: approval
+          requires:
+            - Deploy-Staging-Server
