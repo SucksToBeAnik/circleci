@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 EXPOSE 3000
-EXPOSE 3001
+EXPOSE 80
 
 CMD [ "pm2-runtime", "npm", "--", "start" ]
 
