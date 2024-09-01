@@ -9,7 +9,7 @@ commands:
       - run:
           name: Connect to remote machine
           command: |
-            ssh root@45.61.58.231
+            ssh -o StrictHostKeyChecking=no root@45.61.58.231
 
   build-and-run-image:
     steps:
