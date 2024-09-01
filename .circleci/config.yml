@@ -63,8 +63,10 @@ commands:
 jobs:
   Deploy-Staging-Server:
     docker:
-      - image: cimg/base:2022.09
+      - image: cimg/base:stable
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: false
       - connect-remote
       - build-and-run-image
       - use-remote-context
@@ -74,8 +76,10 @@ jobs:
 
   Deploy-Production-Server:
     docker:
-      - image: cimg/base:2022.09
+      - image: cimg/base:stable
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: false
       - connect-remote
       - build-and-run-image
       - use-remote-context
