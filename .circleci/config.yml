@@ -18,7 +18,7 @@ commands:
       - run:
           name: Check and create Docker context
           command: |
-            docker context create remote --docker "host=ssh://root@45.61.58.231" && docker context use remote
+            docker context create remote --docker "host=ssh://root@45.61.58.231"
 
   build-and-run-image:
     steps:
@@ -49,7 +49,7 @@ commands:
       - run:
           name: Start the server on the remote machine
           command: |
-            docker context use remote && docker ps -a && docker run -d --name askturing-<< parameters.server-type >>-container \
+            docker context show && docker --context remote run -d --name askturing-<< parameters.server-type >>-container \
             -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:${CIRCLE_SHA1}
 
 jobs:
