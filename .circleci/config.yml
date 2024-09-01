@@ -9,7 +9,7 @@ commands:
       - run:
           name: Connect to remote machine
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231 "exit"
+            systemctl start docker && ssh -o StrictHostKeyChecking=no root@45.61.58.231 "exit"
   use-remote-context:
     steps:
       - add_ssh_keys:
