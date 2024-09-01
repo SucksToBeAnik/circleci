@@ -13,8 +13,11 @@ commands:
             # Commands to be executed on the remote machine
             exit
             EOF
-  use-remote-context:
+  start-remote-context:
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - SHA256:O76UEgd4JGePYnipLYEhyK0UXrsuT1cbgZLcobR3GIM
       - run:
           name: Check and create Docker context
           command: |
@@ -59,7 +62,7 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - ssh-remote
+      - start-remote-context
       - build-and-run-image
       - start-server:
           server-type: "staging"
@@ -69,7 +72,7 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - ssh-remote
+      - start-remote-context
       - build-and-run-image
       - start-server:
           server-type: "production"
