@@ -38,7 +38,7 @@ commands:
       - run:
           name: Build a docker image from Dockerfile
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231; docker build --no-cache -t askturing-image:${CIRCLE_SHA1} .
+            ssh -o StrictHostKeyChecking=no root@45.61.58.231 "docker build --no-cache -t askturing-image:${CIRCLE_SHA1} ."
 
   start-server:
     parameters:
@@ -58,10 +58,10 @@ commands:
       - run:
           name: Start the server on the remote machine
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231; docker context use remote && docker stop askturing-<< parameters.server-type >>-container || true && \
+            ssh -o StrictHostKeyChecking=no root@45.61.58.231 "docker context use remote && docker stop askturing-<< parameters.server-type >>-container || true && \
             docker rm askturing-<< parameters.server-type >>-container || true && \
             docker run -d --name askturing-<< parameters.server-type >>-container \
-            -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:${CIRCLE_SHA1}
+            -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:${CIRCLE_SHA1}"
 
 jobs:
   Deploy-Staging-Server:
