@@ -49,7 +49,7 @@ commands:
       - run:
           name: Start the server on the remote machine
           command: |
-            docker --context remote run -d --name askturing-<< parameters.server-type >>-container \
+            docker --context remote run -d --name askturing-<< parameters.server-type >>-container-${CIRCLE_SHA1} \
             -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:${CIRCLE_SHA1}
 
 jobs:
