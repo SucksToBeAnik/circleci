@@ -63,7 +63,7 @@ commands:
 jobs:
   Deploy-Staging-Server:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:current
     steps:
       - connect-remote
       - build-and-run-image
