@@ -9,10 +9,11 @@ commands:
       - run:
           name: Connect to remote machine
           command: |
-            ssh -i ~/.ssh/id_rsa root@45.61.58.231
+            ssh root@45.61.58.231
 
   build-and-run-image:
     steps:
+      - checkout
       - run:
           name: Build a docker image from Dockerfile
           command: |
