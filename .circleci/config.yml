@@ -22,12 +22,12 @@ commands:
           name: Check and create Docker context
           command: |
             if docker context ls --format '{{.Name}}' | grep -q "remote"; then
-              echo "Docker context '${CIRCLE_CONTEXT_NAME}' already exists."
+              echo "Docker context already exists."
             else
               echo "Docker context 'remote' does not exist. Creating..."
               docker context create remote --docker "host=ssh://root@45.61.58.231"
             fi
-            echo "Context created" && docker context use remote && docker info
+            echo "Context created" && docker context ls && docker context use remote && docker info
 
   build-and-run-image:
     steps:
