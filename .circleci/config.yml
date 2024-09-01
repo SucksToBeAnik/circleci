@@ -9,7 +9,7 @@ commands:
       - run:
           name: Connect to remote machine
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231 "exit"
+            docker ps -a && docker image ls && docker context ls && ssh -o StrictHostKeyChecking=no root@45.61.58.231 "exit"
   use-remote-context:
     steps:
       - add_ssh_keys:
@@ -18,13 +18,7 @@ commands:
       - run:
           name: Check and create Docker context
           command: |
-            if docker context ls --format '{{.Name}}' | grep -q "remote"; then
-              echo "Docker context already exists."
-            else
-              echo "Docker context 'remote' does not exist. Creating..."
-              docker context create remote --docker "host=ssh://root@45.61.58.231"
-            fi
-            echo "Context created" && docker context ls && docker context use remote && docker info
+            docker context create remote --docker "host=ssh://root@45.61.58.231" && docker context use remote
 
   build-and-run-image:
     steps:
@@ -55,8 +49,6 @@ commands:
       - run:
           name: Start the server on the remote machine
           command: |
-            docker context use remote && docker stop askturing-<< parameters.server-type >>-container || true && \
-            docker rm askturing-<< parameters.server-type >>-container || true && \
             docker run -d --name askturing-<< parameters.server-type >>-container \
             -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:${CIRCLE_SHA1}
 
