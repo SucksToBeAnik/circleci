@@ -5,7 +5,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - test
+            - SHA256:O76UEgd4JGePYnipLYEhyK0UXrsuT1cbgZLcobR3GIM
       - run:
           name: Connect to remote machine
           command: |
