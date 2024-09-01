@@ -38,7 +38,7 @@ commands:
       - run:
           name: Build a docker image from Dockerfile
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231 "cd ./; ls; git pull; docker build --no-cache -t askturing-image:${CIRCLE_SHA1} ."
+            ls && ssh -o StrictHostKeyChecking=no root@45.61.58.231 "cd ./; ls; git pull; docker build --no-cache -t askturing-image:${CIRCLE_SHA1} ."
 
   start-server:
     parameters:
