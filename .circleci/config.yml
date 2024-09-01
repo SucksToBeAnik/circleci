@@ -9,7 +9,10 @@ commands:
       - run:
           name: Connect to remote machine
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231 << EOF exit EOF
+            ssh -o StrictHostKeyChecking=no root@45.61.58.231 <<EOF
+            # Commands to be executed on the remote machine
+            exit
+            EOF
   use-remote-context:
     steps:
       - run:
