@@ -9,7 +9,19 @@ commands:
       - run:
           name: Connect to remote machine
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231
+            ssh -o StrictHostKeyChecking=no root@45.61.58.231 << EOF exit EOF
+  use-remote-context:
+    steps:
+      - run:
+          name: Check and create Docker context
+          command: |
+            if docker context ls --format '{{.Name}}' | grep -q "remote"; then
+              echo "Docker context '${CIRCLE_CONTEXT_NAME}' already exists."
+            else
+              echo "Docker context 'remote' does not exist. Creating..."
+              docker context create remote --docker "host=ssh://root@45.61.58.231"
+            fi
+            docker context use remote
 
   build-and-run-image:
     steps:
