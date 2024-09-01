@@ -29,7 +29,7 @@ commands:
       - run:
           name: Build a docker image from Dockerfile
           command: |
-            docker --context remote build --no-cache -t askturing-image:${CIRCLE_SHA1} .
+            docker --context remote build -t askturing-image:${CIRCLE_SHA1} .
 
   start-server:
     parameters:
