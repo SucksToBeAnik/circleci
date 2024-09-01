@@ -9,10 +9,7 @@ commands:
       - run:
           name: Connect to remote machine
           command: |
-            ssh -o StrictHostKeyChecking=no root@45.61.58.231 <<EOF
-            # Commands to be executed on the remote machine
-            exit
-            EOF
+            ssh -o StrictHostKeyChecking=no root@45.61.58.231 "exit"
   start-remote-context:
     steps:
       - add_ssh_keys:
@@ -38,7 +35,7 @@ commands:
       - run:
           name: Build a docker image from Dockerfile
           command: |
-            ls && ssh -o StrictHostKeyChecking=no root@45.61.58.231 "cd ./; ls; git pull; docker build --no-cache -t askturing-image:${CIRCLE_SHA1} ."
+            docker build --no-cache -t askturing-image:${CIRCLE_SHA1} .
 
   start-server:
     parameters:
@@ -68,7 +65,8 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      # - start-remote-context
+      - ssh-remote
+      - start-remote-context
       - build-and-run-image
       - start-server:
           server-type: "staging"
