@@ -26,6 +26,8 @@ commands:
             else
               echo "Docker context 'remote' does not exist. Creating..."
               docker context create remote --docker "host=ssh://root@45.61.58.231"
+            fi
+            echo "Context created"
 
   build-and-run-image:
     steps:
