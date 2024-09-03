@@ -59,7 +59,7 @@ commands:
       - run:
           name: Start the server on the remote machine
           command: |
-            docker --context remote run -e PORT=<< parameters.server-port >> --name askturing-<< parameters.server-type >>-container \
+            docker --context remote run -d -e PORT=<< parameters.server-port >> --name askturing-<< parameters.server-type >>-container \
             -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:latest
           when: always
 
@@ -99,6 +99,6 @@ workflows:
     jobs:
       - Deploy-Staging-Server
       - Deploy-Production-Server:
-          # type: approval
+          type: approval
           requires:
             - Deploy-Staging-Server
