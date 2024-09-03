@@ -100,7 +100,8 @@ workflows:
       - Deploy-Staging-Server
       - Hold:
           type: approval
-          requires: Deploy-Staging-Server
+          requires: 
+            - Deploy-Staging-Server
       - Deploy-Production-Server:
           requires:
             - Hold
