@@ -98,7 +98,9 @@ workflows:
   askturing-deployment-workflow:
     jobs:
       - Deploy-Staging-Server
-      - Deploy-Production-Server:
+      - Hold:
           type: approval
+          requires: Deploy-Staging-Server
+      - Deploy-Production-Server:
           requires:
-            - Deploy-Staging-Server
+            - Hold
