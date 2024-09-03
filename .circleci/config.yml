@@ -51,7 +51,7 @@ commands:
       server-port:
         type: integer
         default: 3000
-        description: Staging server will use port 3000 and production will use 80
+        description: Staging server will use port 80 and production will use 3000
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -77,7 +77,7 @@ jobs:
       - build-and-run-image
       - start-server:
           server-type: "staging"
-          server-port: 3000
+          server-port: 80
 
   Deploy-Production-Server:
     docker:
@@ -92,7 +92,7 @@ jobs:
       - build-and-run-image
       - start-server:
           server-type: "production"
-          server-port: 80
+          server-port: 3000
 
 workflows:
   askturing-deployment-workflow:
