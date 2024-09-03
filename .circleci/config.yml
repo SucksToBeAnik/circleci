@@ -10,7 +10,7 @@ commands:
           name: Connect to remote machine
           command: |
             ssh -o StrictHostKeyChecking=no root@45.61.58.231 "exit"
-  use-remote-context:
+  create-remote-context:
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -19,7 +19,16 @@ commands:
           name: Check and create Docker context
           command: |
             docker context create remote --docker "host=ssh://root@45.61.58.231"
-
+  remove-existing-container:
+    parameters:
+      container-type:
+        type: enum
+        enum: ["staging","production"]
+    steps:
+      - run:
+          name: If an image and container already exists delete them first
+          command: |
+            docker --context remote container rm -f askturing-<< parameters.container-type >>-container
   build-and-run-image:
     steps:
       - add_ssh_keys:
@@ -29,7 +38,8 @@ commands:
       - run:
           name: Build a docker image from Dockerfile
           command: |
-            docker --context remote build -t askturing-image:${CIRCLE_SHA1} .
+            docker --context remote build -t askturing-image:latest .
+          when: always
 
   start-server:
     parameters:
@@ -49,8 +59,9 @@ commands:
       - run:
           name: Start the server on the remote machine
           command: |
-            docker --context remote run -d --name askturing-<< parameters.server-type >>-container-${CIRCLE_SHA1} \
-            -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:${CIRCLE_SHA1}
+            docker --context remote run -e PORT=<< parameters.server-port >> --name askturing-<< parameters.server-type >>-container \
+            -p << parameters.server-port >>:<< parameters.server-port >> askturing-image:latest
+          when: always
 
 jobs:
   Deploy-Staging-Server:
@@ -60,7 +71,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - connect-remote
-      - use-remote-context
+      - create-remote-context
+      - remove-existing-container:
+          container-type: "staging"
       - build-and-run-image
       - start-server:
           server-type: "staging"
@@ -73,7 +86,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - connect-remote
-      - use-remote-context
+      - create-remote-context
+      - remove-existing-container:
+          container-type: "production"
       - build-and-run-image
       - start-server:
           server-type: "production"
